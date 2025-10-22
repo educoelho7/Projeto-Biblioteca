@@ -32,7 +32,7 @@ class Emprestimo(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     exemplar = models.ForeignKey(Exemplar, on_delete=models.CASCADE)
     data_emprestimo = models.DateTimeField(auto_now_add=True)
-    data_devolucao = models.DateTimeField(null=True)
+    data_devolucao = models.DateTimeField(null=True, blank=True)
     
     def __str__(self):                       
         return f"{self.usuario} - {self.exemplar}"
@@ -43,3 +43,6 @@ class Multa(models.Model):
     emprestimo = models.ForeignKey(Emprestimo, on_delete=models.CASCADE)
     valor = models.DecimalField(max_digits=5, decimal_places=2)
     status = models.CharField(choices=StatusType, default=StatusType.EM_ABERTO)
+
+    def __str__(self):                       
+        return f"{self.emprestimo} - {self.valor}"
