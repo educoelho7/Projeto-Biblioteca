@@ -1,0 +1,32 @@
+{% extends 'headerFooter.html' %}
+{% load static %}
+
+{% block content %}
+<main class="main-content">
+    <h2>Livros</h2>
+
+    <div class="search-container">
+        <input type="text" placeholder="Pesquisar livro">
+        <span class="search-icon">
+            <img src="{% static 'iconePesquisa.svg' %}" alt="">
+        </span>
+    </div>
+
+    <div class="grid">
+        {% for livro in livros %}
+        <div class="card">
+            <div class="card-header">{{ livro.titulo }}</div>
+            <div class="card-info">
+                <p><strong>Autor:</strong> {{ livro.autor }}</p>
+                <p><strong>Categoria:</strong> {{ livro.categoria }}</p>
+                <p><strong>Ano:</strong> {{ livro.ano }}</p>
+                <p><strong>Editora:</strong> {{ livro.editora }}</p>
+                <p><strong>Exemplares disponíveis:</strong> {{ livro.exemplares_disponiveis }}</p>
+            </div>
+            <button class="card-btn">RESERVAR UM EXEMPLAR</button>
+        </div>
+        {% endfor %}
+    </div>
+</main>
+
+{% endblock %}
