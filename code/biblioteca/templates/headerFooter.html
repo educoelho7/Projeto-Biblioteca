@@ -7,12 +7,22 @@
     <title>Minha Estante</title>
     <link rel="stylesheet" href="{% static 'mystyles.css' %}">
 </head>
+
 <body>
     <header class="header">
-        <div class="menu-icon">
+        <div class="menu">
+          <div class="menu-icon" id="menu-icon">
             <span></span>
             <span></span>
             <span></span>
+          </div>
+
+          <ul class="menu-links">
+            <li><a href="livros.html">Livros</a></li>
+            <li><a href="emprestimos.html">Empréstimos</a></li>
+            <li><a href="multas.html">Multas</a></li>
+            <li><a href="logout.html">Sair</a></li>
+          </ul>
         </div>
 
         <div class="logo">
@@ -33,4 +43,5 @@
         <p>© Todos os direitos reservados</p>
     </footer>
 </body>
+
 </html>

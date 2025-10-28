@@ -20,22 +20,75 @@ body {
     position: relative;
 }
 
+/* Menu */
+
+.menu {
+    position: relative;
+}
+
+.menu-links {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #FFF5DF;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    width: 200px;
+    z-index: 1000;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.menu:hover .menu-links {
+    display: block;
+}
+
 .menu-icon {
+    cursor: pointer;
+    padding: 15px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    height: 24px;
-    width: 24px;
-    cursor: pointer;
+    gap: 6px;
+    background-color: transparent;
+    border-radius: 50%;
+    transition: all 0.3s ease;
 }
 
 .menu-icon span {
-    display: block;
+    width: 32px;
     height: 3px;
-    width: 25px;
+    border-radius: 5px;
     background-color: #FFDB8C;
-    border-radius: 2px;
+    display: block;
+    transition: all 0.3s ease;
 }
+
+.menu-links li {
+    display: block;
+}
+
+.menu-links li a {
+    padding: 12px 16px;
+    display: block;
+    color: #3B2200;
+    text-decoration: none;
+    transition: background-color 0.3s;
+    border: none;
+}
+
+.menu-links li:last-child a {
+    border-bottom: none;
+}
+
+.menu-links li a:hover {
+    background-color: #FFDB8C;
+    color: #3B2200;
+}
+
+/* Logo e perfil */
 
 .logo {
     position: absolute;
@@ -63,7 +116,8 @@ body {
     cursor: pointer;
 }
 
-/* ===== MAIN ===== */
+/* Main */
+
 .main-content {
     padding: 30px 5%;
     max-width: 1200px;
@@ -77,7 +131,8 @@ body {
     text-align: center;
 }
 
-/* ===== SEARCH ===== */
+/* Pesquisar */
+
 .search-container {
     position: relative;
     margin: 0 auto 40px;
@@ -113,7 +168,7 @@ body {
     object-fit: contain;
 }
 
-/* ===== CARDS ===== */
+/* Cards */
 .grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -172,7 +227,7 @@ body {
     background-color: #5a3800;
 }
 
-/* ===== FOOTER ===== */
+/* Footer*/
 .footer {
     text-align: center;
     margin-top: 50px;
@@ -182,27 +237,119 @@ body {
     font-size: 14px;
 }
 
-/* ===== RESPONSIVIDADE ===== */
+/* Responsividade */
 @media (max-width: 768px) {
     .header {
-        flex-direction: column;
-        height: auto;
-        gap: 10px;
+        flex-direction: row; 
+        justify-content: space-between;
+        height: 60px;
+        gap: 0;
+        padding: 10px 20px;
+        position: relative;
+    }
+
+    .menu {
+        order: 1;
+        z-index: 1002;
+    }
+
+    .logo {
+        position: static;
+        transform: none;
+        order: 2;
+        flex: 1;
+        display: flex;
+        justify-content: center;
     }
 
     .logo img {
-        height: 50px;
+        height: 40px;
+        margin-bottom: 0;
+    }
+
+    .profile {
+        order: 3;
+        z-index: 1001;
+    }
+
+    .profile img {
+        width: 35px;
+        height: 35px;
+    }
+
+    .menu-links {
+        width: 180px;
+        left: -10px;
+        margin-top: 5px;
+    }
+
+    .menu-icon {
+        padding: 12px;
+    }
+
+    .menu-icon span {
+        width: 24px;
+        height: 2.5px;
+    }
+
+    .menu-links {
+        z-index: 1003;
+    }
+
+    .grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
     }
 
     .main-content {
         padding: 20px;
     }
+}
 
-    .livro-header {
-        font-size: 1.1rem;
+@media (max-width: 480px) {
+    .header {
+        padding: 8px 15px;
+        height: 55px;
     }
 
-    .livros-grid {
-        grid-template-columns: 1fr;
+    .logo img {
+        height: 35px;
+    }
+
+    .profile img {
+        width: 32px;
+        height: 32px;
+    }
+
+    .menu-links {
+        width: 160px;
+        left: -15px;
+    }
+
+    .menu-icon {
+        padding: 10px;
+    }
+
+    .menu-icon span {
+        width: 22px;
+    }
+
+    .menu-links li a {
+        padding: 10px 14px;
+        font-size: 0.9rem;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    .header {
+        padding: 10px 3%;
+    }
+
+    .logo img {
+        height: 55px;
+    }
+
+    .menu-links {
+        width: 180px;
     }
 }
