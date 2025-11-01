@@ -1,0 +1,62 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minha Estante</title>
+    <link rel="stylesheet" href="{% static 'loginCadastro.css' %}">
+</head>
+
+<body>
+    <main class="main-content">
+        <div class="logo">
+            <img src="{% static 'logoEscura.svg' %}" alt="Logo Minha Estante">
+        </div> 
+        <form action="{% url 'login' %}" method="POST">
+            {% csrf_token %}
+            <div class="input">
+                <span class="input-text">Usuário: </span>
+                <input type="text" class="form-text" placeholder="Nome de usuário..." name="usuario" required>
+            </div>
+            <br>
+            <div class="input">
+                <span class="input-text">Senha: </span>
+                <input type="password" class="form-text" placeholder="Senha..." id="password" name="senha" required>
+                <div class="alterarVisibilidade">
+                    <button class="visibilidade" type="button" onclick="alterarVisibilidadeSenha('password')">
+                        <img id="iconeOlho" src="{% static 'olhoFechado.svg' %}" alt="Mostrar senha">
+                    </button>
+                </div>
+            </div>
+            <br>
+            <input type="submit" value="Entrar" class="btn btn-primary">
+            <p>Ainda não possui uma conta? <a href="{% url 'cadastro' %}">Cadastrar</a></p>
+        </form>
+        <br>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert {% if message.tags == 'success' %}alert-success{% else %}alert-danger{% endif %}" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    </main>
+</body>
+
+<script>
+    function alterarVisibilidadeSenha(idCampo) {
+        const campo = document.getElementById(idCampo);
+        const icone = document.getElementById('iconeOlho');
+        
+        if (campo.type === "password") {
+            campo.type = "text";
+            icone.src = "{% static 'olhoAberto.svg' %}";
+            icone.alt = "Ocultar senha";
+        } else {
+            campo.type = "password";
+            icone.src = "{% static 'olhoFechado.svg' %}";
+            icone.alt = "Mostrar senha";
+        }
+    }
+</script>

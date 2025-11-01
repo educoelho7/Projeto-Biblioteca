@@ -10,111 +10,110 @@
 
 <body>
     <main class="main-content">         
-            <div class="logo">
-                <img src="{% static 'logoEscura.svg' %}" alt="Logo Minha Estante">
-            </div> 
-            <form action="{% url 'cadastro' %}" method="POST" onsubmit="return validaSenha()">
-                {% csrf_token %}
-                <div class="input">
-                    <span class="input-text">Nome de usuário: </span>
-                    <input type="text" class="form-text" placeholder="Usuário ..." name="usuario" required>
+        <div class="logo">
+            <img src="{% static 'logoEscura.svg' %}" alt="Logo Minha Estante">
+        </div> 
+        <form action="{% url 'cadastro' %}" method="POST" onsubmit="return validaSenha()">
+            {% csrf_token %}
+            <div class="input">
+                <span class="input-text">Nome de usuário: </span>
+                <input type="text" class="form-text" placeholder="Nome de usuário ..." name="usuario" required>
+            </div>
+            <br>
+            <div class="input">
+                <span class="input-text">Nome: </span>
+                <input type="text" class="form-text" placeholder="Nome ..." name="nome" required>
+            </div>
+            <br>
+            <div class="input">
+                <span class="input-text">Sobrenome: </span>
+                <input type="text" class="form-text" placeholder="Sobrenome ..." name="sobrenome" required>
+            </div>
+            <br>
+            <div class="input">
+                <span class="input-text">E-mail: </span> 
+                <input type="email" class="form-text" placeholder="E-mail ..." name="email" required>
+            </div>
+            <br>
+            <div class="input">
+                <span class="input-text">Senha: </span>
+                <input type="password" class="form-text" placeholder="Senha ..." id="password" name="senha" required>
+                <div class="alterarVisibilidade">
+                    <button class="visibilidade" type="button" onclick="alterarVisibilidadeSenha('password', 'iconeOlho')">
+                        <img id="iconeOlho" src="{% static 'olhoFechado.svg' %}" alt="Mostrar senha">
+                    </button>
                 </div>
-                <br>
-                <div class="input">
-                    <span class="input-text">Nome: </span>
-                    <input type="text" class="form-text" placeholder="Nome ..." name="nome" required>
+            </div>
+            <br>
+            <div class="input">
+                <span class="input-text">Confirmar senha: </span>
+                <input type="password" class="form-text" placeholder="Confirmar senha ..." id="confirm_password" name="confirmar_senha" required>
+                <div class="alterarVisibilidade">
+                    <button class="visibilidade" type="button" onclick="alterarVisibilidadeSenha('confirm_password', 'iconeOlho2')">
+                        <img id="iconeOlho2" src="{% static 'olhoFechado.svg' %}" alt="Mostrar senha">
+                    </button>
                 </div>
-                <br>
-                <div class="input">
-                    <span class="input-text">Sobrenome: </span>
-                    <input type="text" class="form-text" placeholder="Sobrenome ..." name="sobrenome" required>
-                </div>
-                <br>
-                <div class="input">
-                    <span class="input-text">E-mail: </span> 
-                    <input type="email" class="form-text" placeholder="E-mail ..." name="email" required>
-                </div>
-                <br>
-                <div class="input">
-                    <span class="input-text">Senha: </span>
-                    <input type="password" class="form-text" placeholder="Senha ..." id="password" name="senha" required>
-                    <div class="input-group-append">
-                        <button class="visibilidade" type="button" onclick="alterarVisibilidadeSenha('password')">
-                            <i class="fa fa-eye"></i>
-                        </button>
-                    </div>
-                </div>
-                <br>
-                <div class="input">
-                    <span class="input-text">Confirmar senha: </span>
-                    <input type="password" class="form-text" placeholder="Confirmar senha ..." id="confirm_password" name="confirmar_senha" required>
-                    <div class="input-group-append">
-                        <button class="visibilidade" type="button" onclick="alterarVisibilidadeSenha('confirm_password')">
-                            <i class="fa fa-eye"></i>
-                        </button>
-                    </div>
-                </div>
-                <br>
-                <div class="input">
-                    <span class="input-text">Telefone: </span>
-                    <input type="text" class="form-text" placeholder="(99) 99999-9999" name="telefone" maxlength="15">
-                </div>
-                <br>
-                <div id="passwordError" class="alert alert-danger" style="display: none;">
-                    As senhas não coincidem.
-                </div>
-                <br>
-                <button type="submit" class="btn btn-primary">Cadastrar</button>
-                <p>Já tem uma conta? <a href="{% url 'login' %}">Faça login</a></p>
-            </form>
+            </div>
+            <br>
+            <div class="input">
+                <span class="input-text">Telefone: </span>
+                <input type="text" class="form-text" placeholder="(99) 99999-9999" name="telefone" maxlength="15">
+            </div>
+            <br>
+            <div id="passwordError" class="alert alert-danger" style="display: none;">
+                As senhas não coincidem.
+            </div>
+            <br>
+            <button type="submit" class="btn btn-primary">Cadastrar</button>
+            <p>Já tem uma conta? <a href="{% url 'login' %}">Faça login</a></p>
+        </form>
     </main>
 </body>
-    <script>
-        function alterarVisibilidadeSenha(fieldId) {
-            const field = document.getElementById(fieldId);
-            const button = field.parentNode.querySelector('.visibilidade');
-            const icon = button.querySelector('i');
-            
-            if (field.type === "password") {
-                field.type = "text";
-                icon.classList.remove('fa-eye');
-                icon.classList.add('fa-eye-slash');
-            } else {
-                field.type = "password";
-                icon.classList.remove('fa-eye-slash');
-                icon.classList.add('fa-eye');
-            }
-        }
-        
-        function validaSenha() {
-            const password = document.getElementById("password").value;
-            const confirmPassword = document.getElementById("confirm_password").value;
-            const errorDiv = document.getElementById("passwordError");
-
-            if (password !== confirmPassword) {
-                errorDiv.style.display = "block";
-                return false; 
-            } else {
-                errorDiv.style.display = "none";
-                return true; 
-            }
-        }
-
-        const telefoneInput = document.querySelector('input[name="telefone"]');
+<script>
+    function alterarVisibilidadeSenha(idCampo, idIcone) {
+        const campo = document.getElementById(idCampo);
+        const icone = document.getElementById(idIcone);
     
-        telefoneInput.addEventListener('input', function(e) {
-            let value = e.target.value.replace(/\D/g, ''); 
-            if (value.length > 11) value = value.slice(0, 11);
-            if (value.length > 6 && value.length <= 10) {
-                value = value.replace(/^(\d{2})(\d{4})(\d{0,4}).*/, '($1) $2-$3');
-            } else if (value.length > 10) {
-                value = value.replace(/^(\d{2})(\d{5})(\d{0,4}).*/, '($1) $2-$3');
-            } else if (value.length > 2) {
-                value = value.replace(/^(\d{2})(\d{0,5})/, '($1) $2');
-            } else {
-                value = value.replace(/^(\d{0,2})/, '($1');
-            }
+        if (campo.type === "password") {
+            campo.type = "text";
+            icone.src = "{% static 'olhoAberto.svg' %}";
+            icone.alt = "Ocultar senha";
+        } else {
+            campo.type = "password";
+            icone.src = "{% static 'olhoFechado.svg' %}";
+            icone.alt = "Mostrar senha";
+        }
+    }
+        
+    function validaSenha() {
+        const password = document.getElementById("password").value;
+        const confirmPassword = document.getElementById("confirm_password").value;
+        const errorDiv = document.getElementById("passwordError");
 
-            e.target.value = value;
-        });
-    </script>
+        if (password !== confirmPassword) {
+            errorDiv.style.display = "block";
+            return false; 
+        } else {
+            errorDiv.style.display = "none";
+            return true; 
+        }
+    }
+
+    const telefoneInput = document.querySelector('input[name="telefone"]');
+    
+    telefoneInput.addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, ''); 
+        if (value.length > 11) value = value.slice(0, 11);
+        if (value.length > 6 && value.length <= 10) {
+            value = value.replace(/^(\d{2})(\d{4})(\d{0,4}).*/, '($1) $2-$3');
+        } else if (value.length > 10) {
+            value = value.replace(/^(\d{2})(\d{5})(\d{0,4}).*/, '($1) $2-$3');
+        } else if (value.length > 2) {
+            value = value.replace(/^(\d{2})(\d{0,5})/, '($1) $2');
+        } else {
+            value = value.replace(/^(\d{0,2})/, '($1');
+        }
+
+        e.target.value = value;
+    });
+</script>
