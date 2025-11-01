@@ -6,9 +6,9 @@
     <h2>Livros</h2>
 
     <div class="search-container">
-        <input type="text" placeholder="Pesquisar livro">
+        <input type="text" id="searchInput" placeholder="Pesquisar livro" onkeyup="filtrarLivros()">
         <span class="search-icon">
-            <img src="{% static 'iconePesquisa.svg' %}" alt="">
+            <img src="{% static 'iconePesquisa.svg' %}" alt="Ícone pesquisa">
         </span>
     </div>
 
@@ -23,10 +23,51 @@
                 <p><strong>Editora:</strong> {{ livro.editora }}</p>
                 <p><strong>Exemplares disponíveis:</strong> {{ livro.exemplares_disponiveis }}</p>
             </div>
-            <button class="card-btn">RESERVAR UM EXEMPLAR</button>
+            {% if livro.exemplares_disponiveis > 0 %}
+                <button class="card-btn" onclick="reservarLivro({{livro.id}})">RESERVAR UM EXEMPLAR</button>
+            {% else %}
+                <center><p>Não há nenhum exemplar disponível desse livro.</p></center>
+            {% endif %}
         </div>
         {% endfor %}
     </div>
 </main>
+<script>
+    async function reservarLivro(livroId) {
+        const csrfToken = "{{ csrf_token }}"; 
+        
+        const confirmacao = confirm("Quer mesmo reservar esse livro?");
+        if (!confirmacao) return;
 
+        const response = await fetch(`/livros/${livroId}/reservar/`, {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": csrfToken,
+            },
+        });
+
+        if (response.ok) {
+            alert("Livro reservado com sucesso!");
+            window.location.reload();
+        } else {
+            alert("Erro ao reservar o livro");
+        }
+    }
+
+    function filtrarLivros() {
+        const input = document.getElementById('searchInput');
+        const filtro = input.value.toLowerCase();
+        const cards = document.querySelectorAll('.grid .card');
+
+        cards.forEach(card => {
+            const titulo = card.querySelector('.card-header').innerText.toLowerCase();
+            if (titulo.includes(filtro)) {
+                card.style.display = '';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    }
+
+</script>
 {% endblock %}
