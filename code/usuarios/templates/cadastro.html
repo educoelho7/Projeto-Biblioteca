@@ -32,7 +32,10 @@
             <br>
             <div class="input">
                 <span class="input-text">E-mail: </span> 
-                <input type="email" class="form-text" placeholder="E-mail ..." name="email" required>
+                <input type="email" class="form-text" id="email" placeholder="E-mail ..." name="email" required>
+                <span id="emailError" class="alert alert-danger" style="display: none;">
+                    E-mail inválido. Digite um endereço válido.
+                </span>
             </div>
             <br>
             <div class="input">
@@ -60,13 +63,17 @@
                 <input type="text" class="form-text" placeholder="(99) 99999-9999" name="telefone" maxlength="15">
             </div>
             <br>
-            <div id="passwordError" class="alert alert-danger" style="display: none;">
-                As senhas não coincidem.
-            </div>
-            <br>
             <button type="submit" class="btn btn-primary">Cadastrar</button>
             <p>Já tem uma conta? <a href="{% url 'login' %}">Faça login</a></p>
         </form>
+        <br>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert {% if message.tags == 'success' %}alert-success{% else %}alert-danger{% endif %}" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
     </main>
 </body>
 <script>
@@ -115,5 +122,17 @@
         }
 
         e.target.value = value;
+    });
+
+    const emailInput = document.getElementById("email");
+    const emailError = document.getElementById("emailError");
+
+    emailInput.addEventListener("invalid", function (event) {
+        event.preventDefault();
+        emailError.style.display = "block";
+    });
+
+    emailInput.addEventListener("input", function () {
+        emailError.style.display = "none";
     });
 </script>

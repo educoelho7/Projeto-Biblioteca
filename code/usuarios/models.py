@@ -4,9 +4,12 @@ from django.db import models
 
 class Usuario(AbstractUser):
     telefone = models.CharField(
-        max_length=11,
+        max_length=15,
         validators=[
-            RegexValidator(r'^\d{10,11}$', "O telefone deve conter 10 ou 11 dígitos.")
+            RegexValidator(
+                r'^.{14,15}$',
+                "O telefone deve conter entre 14 e 15 caracteres."
+            )
         ]
     )
     pendencia = models.BooleanField(default=False)
