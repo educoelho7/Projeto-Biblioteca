@@ -30,8 +30,8 @@ def reservar(request, livro_id):
     if request.method == "POST":
         try:
             exemplar = Exemplar.objects.filter(livro_id=livro_id, status=Exemplar.StatusType.DISPONIVEL).first()
-
-            if exemplar:
+            multas = Multa.objects.filter(emprestimo__usuario=request.user, status=Multa.StatusType.EM_ABERTO)
+            if exemplar and not multas:
                 emprestimo = Emprestimo.objects.create(
                     usuario=request.user,
                     exemplar=exemplar
@@ -39,6 +39,8 @@ def reservar(request, livro_id):
 
                 exemplar.status = Exemplar.StatusType.EMPRESTADO
                 exemplar.save()
+            
+            return JsonResponse({'multas_em_aberto': True if multas else False})
 
         except Exception as e:
             messages.error(request, f"Ocorreu um erro: {e}")
