@@ -29,10 +29,8 @@
                     {% endif %}
                 </p>
             </div>
-            {% if not emprestimo.data %}
+            {% if not emprestimo.data_devolucao %}
                 <button class="card-btn" onclick="devolverExemplar({{emprestimo.id}})">DEVOLVER</button>
-            {% else %}
-                <center><p>Não há nenhum exemplar disponível desse livro.</p></center>
             {% endif %}
         </div>
         {% endfor %}
