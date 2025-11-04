@@ -54,7 +54,7 @@
         const data = await response.json()
 
         if (response.ok) {
-            if (data.atraso) {
+            if (data.atraso > 0) {
                 alert(`Exemplar devolvido com multa! (${data.atraso} dias de atraso)`);
             } else {
                 alert("Exemplar devolvido com sucesso!");
