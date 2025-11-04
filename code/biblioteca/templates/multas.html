@@ -31,7 +31,7 @@
         const confirmacao = confirm("Quer mesmo pagar essa multa?");
         if (!confirmacao) return;
 
-        const response = await fetch(`/multas/${multaId}/pagar`, {
+        const response = await fetch(`/multas/${multaId}/pagar/`, {
             method: "POST",
             headers: {
                 "X-CSRFToken": csrfToken,

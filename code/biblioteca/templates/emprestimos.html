@@ -15,8 +15,8 @@
     <div class="grid">
         {% for emprestimo in emprestimos %}
         <div class="card">
-            <div class="card-header">{{ emprestimo.id }}</div>
             <div class="card-info">
+                <p><strong>Código:</strong> {{ emprestimo.id }}</p>
                 <p><strong>Exemplar:</strong> {{ emprestimo.exemplar }}</p>
                 <p class="data-emprestimo" data-date={{ emprestimo.data_emprestimo|date:'Y-m-d' }}>
                     <strong>Data empréstimo:</strong> {{ emprestimo.data_emprestimo }}
@@ -43,7 +43,7 @@
         const confirmacao = confirm("Quer mesmo devolver esse exemplar?");
         if (!confirmacao) return;
 
-        const response = await fetch(`/devolver/${emprestimoId}/`, {
+        const response = await fetch(`/emprestimos/${emprestimoId}/devolver/`, {
             method: "POST",
             headers: {
                 "X-CSRFToken": csrfToken,

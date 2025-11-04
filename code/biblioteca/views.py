@@ -53,7 +53,7 @@ def emprestimos(request):
     })
 
 @login_required(login_url="/auth/login")
-def devolver_exemplar(request, emprestimo_id):
+def devolver(request, emprestimo_id):
     if request.method == "POST":
         emprestimo = Emprestimo.objects.get(id=emprestimo_id)
         emprestimo.data_devolucao = timezone.now()
