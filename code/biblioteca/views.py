@@ -9,6 +9,7 @@ from django.utils import timezone
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.contrib.auth import update_session_auth_hash
+from .constants import QTD_MAXIMA_DIAS_DEVOLUCAO, VALOR_BASE_MULTA, VALOR_POR_DIA_ATRASO
 
 @login_required(login_url="/auth/login")
 def livros(request):
@@ -59,17 +60,18 @@ def devolver(request, emprestimo_id):
         emprestimo = Emprestimo.objects.get(id=emprestimo_id)
         emprestimo.data_devolucao = timezone.now()
         emprestimo.save()
-        days = (emprestimo.data_devolucao - emprestimo.data_emprestimo).days 
-        if days > 10:
+        dias = (emprestimo.data_devolucao - emprestimo.data_emprestimo).days
+        atraso = dias - QTD_MAXIMA_DIAS_DEVOLUCAO
+        if atraso > 0:
             Multa.objects.create(
                 emprestimo=emprestimo,
-                valor=5+2*days,
+                valor=VALOR_BASE_MULTA+VALOR_POR_DIA_ATRASO*atraso,
                 status=Multa.StatusType.EM_ABERTO
             )
 
         emprestimo.exemplar.status = Exemplar.StatusType.DISPONIVEL
         emprestimo.exemplar.save()
-        return JsonResponse({'atraso': days - 10})
+        return JsonResponse({'atraso': atraso})
 
     return JsonResponse({'error': 'Método inválido'}, status=400)
 
