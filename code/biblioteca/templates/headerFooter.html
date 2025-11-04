@@ -26,11 +26,15 @@
         </div>
 
         <div class="logo">
-            <img src="{% static 'logoClara.svg' %}" alt="Logo">
+            <a href="{% url 'livros' %}">
+                <img src="{% static 'logoClara.svg' %}" alt="Logo">
+            </a>
         </div>
 
         <div class="profile">
-            <img src="{% static 'perfil.png' %}" alt="Perfil">
+            <a href="{% url 'perfil' %}">
+                <img src="{% static 'perfil.png' %}" alt="Perfil">
+            </a>
         </div>
     </header>
 

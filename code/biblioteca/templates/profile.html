@@ -1,0 +1,76 @@
+{% extends 'headerFooter.html' %}
+{% load static %}
+
+{% block content %}
+<main class="profile-container">
+  <div class="profile-left">
+    <img src="{% static 'perfil.png' %}" alt="Avatar" class="profile-avatar">
+    <h2 class="profile-name">{{ user.username }}</h2>
+  </div>
+
+  <form class="profile-form" method="POST" action="{% url 'alterar_perfil' %}">
+    {% csrf_token %}
+    <div class="form-row">
+      <div class="form-group">
+        <label for="email">E-mail</label>
+        <input name="email" type="email" value="{{ user.email }}">
+      </div>
+
+      <div class="form-group">
+        <label for="telefone">Telefone</label>
+        <input name="telefone" type="tel" maxlength="11" value="{{ user.telefone }}" onkeyup="handlePhone(event)">
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="nome">Nome</label>
+        <input name="nome" type="text" value="{{ user.first_name }}">
+      </div>
+
+      <div class="form-group">
+        <label for="sobrenome">Sobrenome</label>
+        <input name="sobrenome" type="text" value="{{ user.last_name }}">
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="senha">Senha</label>
+        <input name="senha" type="password" value="">
+      </div>
+
+      <div class="form-group">
+        <label for="nova-senha">Nova senha</label>
+        <input name="nova-senha" type="password" value="">
+      </div>
+    </div>
+
+    <button type="submit" class="profile-save-btn">SALVAR</button>
+  </form>
+</main>
+
+<script>
+    const handlePhone = (event) => {
+        let input = event.target
+        input.value = phoneMask(input.value)
+    }
+
+    const phoneMask = (value) => {
+        if (!value) return ""
+        value = value.replace(/\D/g,'')
+        value = value.replace(/(\d{2})(\d)/,"($1) $2")
+        value = value.replace(/(\d)(\d{4})$/,"$1-$2")
+        return value
+    }
+</script>
+
+{% if message %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const message = "{{ message }}";
+        alert(message);
+    });
+</script>
+{% endif %}
+{% endblock %}

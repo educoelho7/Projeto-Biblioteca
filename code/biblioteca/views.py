@@ -8,6 +8,7 @@ from django.contrib import messages
 from django.utils import timezone
 from django.http import JsonResponse
 from django.shortcuts import render
+from django.contrib.auth import update_session_auth_hash
 
 @login_required(login_url="/auth/login")
 def livros(request):
@@ -88,3 +89,49 @@ def pagar(request, multa_id):
         multa.save()
     
     return redirect('multas')
+
+@login_required(login_url="/auth/login")
+def pagar(request, multa_id):
+    if request.method == "POST":
+        multa = Multa.objects.get(id=multa_id)
+        multa.status = Multa.StatusType.PAGA
+        multa.save()
+    
+    return redirect('multas')
+
+@login_required(login_url="/auth/login")
+def perfil(request):
+    return render(request, 'profile.html', {
+        'user': request.user
+    })
+
+@login_required(login_url="/auth/login")
+def alterar_perfil(request):
+    user = request.user
+
+    if request.method == 'POST':
+        password = request.POST.get('senha')
+
+        # Verify the password
+        if not user.check_password(password):
+            message = "Senha incorreta. As alterações não foram salvas."
+            return render(request, 'profile.html', {'user': user, 'message': message})
+
+        # If password is correct, update the fields
+        user.first_name = request.POST.get('nome', user.first_name)
+        user.last_name = request.POST.get('sobrenome', user.last_name)
+        user.email = request.POST.get('email', user.email)
+        user.telefone = request.POST.get('telefone', user.telefone)
+        
+        nova_senha = request.POST.get('nova-senha', '')
+        if nova_senha:
+            user.set_password(nova_senha)
+            user.save()
+            update_session_auth_hash(request, user)
+        else:
+            user.save()
+
+        message = "Perfil atualizado com sucesso!"
+        return render(request, 'profile.html', {'user': user, 'message': message})
+
+    return render(request, 'profile.html', {'user': user })

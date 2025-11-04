@@ -8,4 +8,6 @@ urlpatterns = [
     path('emprestimos/<int:emprestimo_id>/devolver/', views.devolver, name='devolver'),
     path('multas', views.multas, name='multas'),
     path('multas/<int:multa_id>/pagar/', views.pagar, name='pagar'),
+    path('perfil', views.perfil, name='perfil'),
+    path('perfil/alterar/', views.alterar_perfil, name='alterar_perfil'),
 ]
