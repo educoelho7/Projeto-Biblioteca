@@ -1,0 +1,88 @@
+{% extends 'headerFooter.html' %}
+{% load static %}
+
+{% block content %}
+<main class="main-content">
+    <h2>Meus empréstimos</h2>
+
+    <div class="search-container">
+        <input type="date" id="dateFilter" onchange="filtrarPorData()">
+        <span class="search-icon">
+            <img src="{% static 'iconePesquisa.svg' %}" alt="Ícone pesquisa">
+        </span>
+    </div>
+
+    <div class="grid">
+        {% for emprestimo in emprestimos %}
+        <div class="card">
+            <div class="card-header">{{ emprestimo.id }}</div>
+            <div class="card-info">
+                <p><strong>Exemplar:</strong> {{ emprestimo.exemplar }}</p>
+                <p class="data-emprestimo" data-date={{ emprestimo.data_emprestimo|date:'Y-m-d' }}>
+                    <strong>Data empréstimo:</strong> {{ emprestimo.data_emprestimo }}
+                </p>
+                <p><strong>Data devolução:</strong>
+                    {% if emprestimo.data_devolucao %}
+                        {{ emprestimo.data_devolucao }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </p>
+            </div>
+            {% if not emprestimo.data %}
+                <button class="card-btn" onclick="devolverExemplar({{emprestimo.id}})">DEVOLVER</button>
+            {% else %}
+                <center><p>Não há nenhum exemplar disponível desse livro.</p></center>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+</main>
+<script>
+    async function devolverExemplar(emprestimoId) {
+        const csrfToken = "{{ csrf_token }}"; 
+        
+        const confirmacao = confirm("Quer mesmo devolver esse exemplar?");
+        if (!confirmacao) return;
+
+        const response = await fetch(`/devolver/${emprestimoId}/`, {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": csrfToken,
+                "Content-Type": "application/json"
+            },
+        });
+
+        const data = await response.json()
+
+        if (response.ok) {
+            if (data.atraso) {
+                alert(`Exemplar devolvido com multa! (${data.atraso} dias de atraso)`);
+            } else {
+                alert("Exemplar devolvido com sucesso!");
+            }
+            window.location.reload();
+        } else {
+            alert("Erro ao devolver o exemplar");
+        }
+    }
+
+    function filtrarPorData() {
+        const dateInput = document.getElementById('dateFilter').value;
+        const cards = document.querySelectorAll('.grid .card');
+
+        cards.forEach(card => {
+            const dataEmprestimoEl = card.querySelector('.data-emprestimo');
+            if (!dataEmprestimoEl) return;
+
+            const dataEmprestimo = dataEmprestimoEl.dataset.date; // value in ISO format
+            if (!dateInput || dataEmprestimo.startsWith(dateInput)) {
+                card.style.display = '';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    }
+
+</script>
+{% endblock %}

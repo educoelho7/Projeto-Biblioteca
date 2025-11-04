@@ -2,9 +2,12 @@ from django.db.models import Count, Q
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.template import loader
-from .models import Livro, Exemplar, Emprestimo
+from .models import Livro, Exemplar, Emprestimo, Multa
 from django.shortcuts import redirect
 from django.contrib import messages
+from django.utils import timezone
+from django.http import JsonResponse
+from django.shortcuts import render
 
 @login_required(login_url="/auth/login")
 def livros(request):
@@ -41,3 +44,30 @@ def reservar(request, livro_id):
     return redirect('livros')
 
 
+@login_required(login_url="/auth/login")
+def emprestimos(request):
+    emprestimos = Emprestimo.objects.filter(usuario=request.user)
+
+    return render(request, 'emprestimos.html', {
+        'emprestimos': emprestimos
+    })
+
+@login_required(login_url="/auth/login")
+def devolver_exemplar(request, emprestimo_id):
+    if request.method == "POST":
+        emprestimo = Emprestimo.objects.get(id=emprestimo_id)
+        emprestimo.data_devolucao = timezone.now()
+        emprestimo.save()
+        days = (emprestimo.data_devolucao - emprestimo.data_emprestimo).days 
+        if days > 10:
+            Multa.objects.create(
+                emprestimo=emprestimo,
+                valor=5+2*days,
+                status=Multa.StatusType.EM_ABERTO
+            )
+
+        emprestimo.exemplar.status = Exemplar.StatusType.DISPONIVEL
+        emprestimo.exemplar.save()
+        return JsonResponse({'atraso': days - 10})
+
+    return JsonResponse({'error': 'Método inválido'}, status=400)
