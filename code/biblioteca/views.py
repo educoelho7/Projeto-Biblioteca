@@ -71,3 +71,20 @@ def devolver_exemplar(request, emprestimo_id):
         return JsonResponse({'atraso': days - 10})
 
     return JsonResponse({'error': 'Método inválido'}, status=400)
+
+@login_required(login_url="/auth/login")
+def multas(request):
+    multas = Multa.objects.filter(emprestimo__usuario=request.user)
+
+    return render(request, 'multas.html', {
+        'multas': multas
+    })
+
+@login_required(login_url="/auth/login")
+def pagar(request, multa_id):
+    if request.method == "POST":
+        multa = Multa.objects.get(id=multa_id)
+        multa.status = Multa.StatusType.PAGA
+        multa.save()
+    
+    return redirect('multas')
