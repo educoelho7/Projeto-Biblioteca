@@ -138,39 +138,57 @@ body {
 
 /* Pesquisar */
 
+/* container principal: flex, borda arredondada que envolve input + botão */
 .search-container {
-    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0;                 /* sem gap — usamos overflow:hidden para flush */
     margin: 0 auto 40px;
     max-width: 100%;
     width: 100%;
-}
-
-.search-container input {
-    width: 100%;
-    box-sizing: border-box;
-    padding: 12px 40px;
     border: 2px solid #834D00;
     border-radius: 30px;
+    overflow: hidden;      /* mantém o raio aplicado ao conjunto */
+    background: transparent;
+}
+
+/* sobrescreve qualquer width:100% anterior e faz o input crescer */
+.search-container input[type="text"],
+.search-container input {
+    flex: 1 1 auto;        /* ocupa o espaço disponível */
+    min-width: 0;          /* evita overflow em flexbox */
+    border: none;
+    outline: none;
+    padding: 12px 16px;
     font-size: 1rem;
     color: #834D00;
     background-color: transparent;
+    /* remova/evite width:100% aqui — estamos usando flex */
 }
 
-.search-container .search-icon {
-    position: absolute;
-    left: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #834D00;
-    width: 24px;
-    height: 24px;
-    font-size: 18px;
-}
-
-.search-container .search-icon img {
-    width: 100%;
+/* botão do lado direito */
+.search-btn {
+    background-color: transparent;
+    border: none;
+    padding: 10px 14px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     height: 100%;
+}
+
+/* ícone dentro do botão */
+.search-btn img {
+    width: 20px;
+    height: 20px;
     object-fit: contain;
+    display: block;
+}
+
+/* opção visual ao passar o mouse */
+.search-btn:hover img {
+    filter: brightness(0.85);
 }
 
 /* Cards */
@@ -452,4 +470,27 @@ input:focus {
 
 .profile-save-btn:hover {
     background-color: #5a3800;
+}
+
+/* Pagination */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+    gap: 10px;
+}
+.pagination a {
+    background-color: #3B2200;
+    color: #FFDB8C;
+    padding: 8px 12px;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background 0.3s;
+}
+.pagination a:hover {
+    background-color: #5b3600;
+}
+.pagination span {
+    font-weight: bold;
 }

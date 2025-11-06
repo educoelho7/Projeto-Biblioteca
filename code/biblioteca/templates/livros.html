@@ -6,10 +6,10 @@
     <h2>Livros</h2>
 
     <div class="search-container">
-        <input type="text" id="searchInput" placeholder="Pesquisar livro" onkeyup="filtrarLivros()">
-        <span class="search-icon">
+        <input type="text" id="searchInput" placeholder="Pesquisar livro" value="{{ query }}">
+        <button class="search-btn" type="button" onclick="filtrarLivro()">
             <img src="{% static 'iconePesquisa.svg' %}" alt="Ícone pesquisa">
-        </span>
+        </button>
     </div>
 
     <div class="grid">
@@ -31,7 +31,23 @@
         </div>
         {% endfor %}
     </div>
+    {% if livros.has_other_pages %}
+    <div class="pagination">
+        {% if livros.has_previous %}
+            <a href="?page=1">&laquo; Primeira</a>
+            <a href="?page={{ livros.previous_page_number }}">Anterior</a>
+        {% endif %}
+
+        <span>Página {{ livros.number }} de {{ livros.paginator.num_pages }}</span>
+
+        {% if livros.has_next %}
+            <a href="?page={{ livros.next_page_number }}">Próxima</a>
+            <a href="?page={{ livros.paginator.num_pages }}">Última &raquo;</a>
+        {% endif %}
+    </div>
+    {% endif %}
 </main>
+
 <script>
     async function reservarLivro(livroId) {
         const csrfToken = "{{ csrf_token }}"; 
@@ -62,18 +78,20 @@
 
     function filtrarLivros() {
         const input = document.getElementById('searchInput');
-        const filtro = input.value.toLowerCase();
-        const cards = document.querySelectorAll('.grid .card');
-
-        cards.forEach(card => {
-            const titulo = card.querySelector('.card-header').innerText.toLowerCase();
-            if (titulo.includes(filtro)) {
-                card.style.display = '';
-            } else {
-                card.style.display = 'none';
-            }
-        });
+        const query = input.value.toLowerCase();
+        if (query) {
+            window.location.href = `/livros?q=${query}`;
+        } else {
+            window.location.href = '/livros';
+        }
     }
+
+    document.getElementById("searchInput").addEventListener("keydown", function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            filtrarLivros();
+        }
+    });
 
 </script>
 {% endblock %}

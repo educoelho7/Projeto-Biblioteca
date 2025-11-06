@@ -1,24 +1,29 @@
-from django.db.models import Count, Q
+from django.db.models import Count, Q, F, OrderBy
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.template import loader
 from .models import Livro, Exemplar, Emprestimo, Multa
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.contrib import messages
 from django.utils import timezone
-from django.http import JsonResponse
-from django.shortcuts import render
+from django.core.paginator import Paginator
 from django.contrib.auth import update_session_auth_hash
 from .constants import QTD_MAXIMA_DIAS_DEVOLUCAO, VALOR_BASE_MULTA, VALOR_POR_DIA_ATRASO
 
 @login_required(login_url="/auth/login")
 def livros(request):
+    query = request.GET.get("q", "")
     livros = Livro.objects.annotate(
         exemplares_disponiveis=Count(
             'exemplar',
             filter=Q(exemplar__status=Exemplar.StatusType.DISPONIVEL)
         )
     ).order_by('-exemplares_disponiveis', 'titulo')
+    if query:
+        livros = livros.filter(titulo__icontains=query)
+    paginator = Paginator(livros, 10)
+    page_number = request.GET.get('page')
+    livros = paginator.get_page(page_number)
     context = {
         'livros': livros
     }
@@ -50,11 +55,16 @@ def reservar(request, livro_id):
 
 @login_required(login_url="/auth/login")
 def emprestimos(request):
-    emprestimos = Emprestimo.objects.filter(usuario=request.user)
+    emprestimos = Emprestimo.objects.filter(usuario=request.user).order_by(
+        OrderBy(F('data_devolucao'), nulls_first=True),
+        "-data_emprestimo"
+    )
 
-    return render(request, 'emprestimos.html', {
-        'emprestimos': emprestimos
-    })
+    paginator = Paginator(emprestimos, 10)
+    page_number = request.GET.get("page")
+    emprestimos = paginator.get_page(page_number)
+    
+    return render(request, "emprestimos.html", {"emprestimos": emprestimos})
 
 @login_required(login_url="/auth/login")
 def devolver(request, emprestimo_id):
@@ -79,11 +89,13 @@ def devolver(request, emprestimo_id):
 
 @login_required(login_url="/auth/login")
 def multas(request):
-    multas = Multa.objects.filter(emprestimo__usuario=request.user)
+    multas = Multa.objects.filter(emprestimo__usuario=request.user).order_by("-emprestimo__data_devolucao")
 
-    return render(request, 'multas.html', {
-        'multas': multas
-    })
+    paginator = Paginator(multas, 10)
+    page_number = request.GET.get("page")
+    multas = paginator.get_page(page_number)
+    
+    return render(request, "multas.html", {"multas": multas})
 
 @login_required(login_url="/auth/login")
 def pagar(request, multa_id):

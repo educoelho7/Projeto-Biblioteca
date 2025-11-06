@@ -23,6 +23,21 @@
         </div>
         {% endfor %}
     </div>
+    {% if multas.has_other_pages %}
+    <div class="pagination">
+        {% if multas.has_previous %}
+            <a href="?page=1">&laquo; Primeira</a>
+            <a href="?page={{ multas.previous_page_number }}">Anterior</a>
+        {% endif %}
+
+        <span>Página {{ multas.number }} de {{ multas.paginator.num_pages }}</span>
+
+        {% if multas.has_next %}
+            <a href="?page={{ multas.next_page_number }}">Próxima</a>
+            <a href="?page={{ multas.paginator.num_pages }}">Última &raquo;</a>
+        {% endif %}
+    </div>
+    {% endif %}
 </main>
 <script>
     async function pagarMulta(multaId) {

@@ -5,13 +5,6 @@
 <main class="main-content">
     <h2>Meus empréstimos</h2>
 
-    <div class="search-container">
-        <input type="date" id="dateFilter" onchange="filtrarPorData()">
-        <span class="search-icon">
-            <img src="{% static 'iconePesquisa.svg' %}" alt="Ícone pesquisa">
-        </span>
-    </div>
-
     <div class="grid">
         {% for emprestimo in emprestimos %}
         <div class="card">
@@ -35,6 +28,21 @@
         </div>
         {% endfor %}
     </div>
+    {% if emprestimos.has_other_pages %}
+    <div class="pagination">
+        {% if emprestimos.has_previous %}
+            <a href="?page=1">&laquo; Primeira</a>
+            <a href="?page={{ emprestimos.previous_page_number }}">Anterior</a>
+        {% endif %}
+
+        <span>Página {{ emprestimos.number }} de {{ emprestimos.paginator.num_pages }}</span>
+
+        {% if emprestimos.has_next %}
+            <a href="?page={{ emprestimos.next_page_number }}">Próxima</a>
+            <a href="?page={{ emprestimos.paginator.num_pages }}">Última &raquo;</a>
+        {% endif %}
+    </div>
+    {% endif %}
 </main>
 <script>
     async function devolverExemplar(emprestimoId) {
@@ -64,23 +72,5 @@
             alert("Erro ao devolver o exemplar");
         }
     }
-
-    function filtrarPorData() {
-        const dateInput = document.getElementById('dateFilter').value;
-        const cards = document.querySelectorAll('.grid .card');
-
-        cards.forEach(card => {
-            const dataEmprestimoEl = card.querySelector('.data-emprestimo');
-            if (!dataEmprestimoEl) return;
-
-            const dataEmprestimo = dataEmprestimoEl.dataset.date; // value in ISO format
-            if (!dateInput || dataEmprestimo.startsWith(dateInput)) {
-                card.style.display = '';
-            } else {
-                card.style.display = 'none';
-            }
-        });
-    }
-
 </script>
 {% endblock %}
