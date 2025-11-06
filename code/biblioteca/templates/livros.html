@@ -2,12 +2,12 @@
 {% load static %}
 
 {% block content %}
-<main class="main-content">
+<main class="main-content"> 
     <h2>Livros</h2>
 
     <div class="search-container">
         <input type="text" id="searchInput" placeholder="Pesquisar livro" value="{{ query }}">
-        <button class="search-btn" type="button" onclick="filtrarLivro()">
+        <button class="search-btn" type="button" onclick="filtrarLivros()">
             <img src="{% static 'iconePesquisa.svg' %}" alt="Ícone pesquisa">
         </button>
     </div>
@@ -46,7 +46,7 @@
         {% endif %}
     </div>
     {% endif %}
-</main>
+</main> 
 
 <script>
     async function reservarLivro(livroId) {

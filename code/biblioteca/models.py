@@ -1,6 +1,7 @@
 from django.core.validators import RegexValidator
 from usuarios.models import Usuario
 from django.db import models
+from django.utils import timezone
 
 class Livro(models.Model):
     titulo = models.CharField(max_length=255)
@@ -31,7 +32,7 @@ class Exemplar(models.Model):
 class Emprestimo(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     exemplar = models.ForeignKey(Exemplar, on_delete=models.CASCADE)
-    data_emprestimo = models.DateTimeField(auto_now_add=True)
+    data_emprestimo = models.DateTimeField(default=timezone.now)
     data_devolucao = models.DateTimeField(null=True, blank=True)
     
     def __str__(self):                       
