@@ -13,7 +13,7 @@
             placeholder="Pesquisar livro" 
             value="{{ query }}"
             hx-get="/livros"
-            hx-target="#livros-grid"
+            hx-target="#livros-container"
             hx-trigger="keyup changed"
             hx-include="#searchInput"
         />
@@ -22,8 +22,9 @@
         </button>
     </div>
 
-    <div class="grid" id="livros-grid">
+    <div id="livros-container">
         {% include 'partials/lista_livros.html' %}
     </div>
+    
 </main> 
 {% endblock %}

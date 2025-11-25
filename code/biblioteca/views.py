@@ -50,14 +50,23 @@ def reservar(request, livro_id):
                 exemplar.status = Exemplar.StatusType.EMPRESTADO
                 exemplar.save()
             
-            disponiveis = Exemplar.objects.filter(
-                livro=livro,
-                status=Exemplar.StatusType.DISPONIVEL
-            ).count()
+            livros = Livro.objects.annotate(
+                exemplares_disponiveis=Count(
+                    'exemplar',
+                    filter=Q(exemplar__status=Exemplar.StatusType.DISPONIVEL)
+                )
+            ).order_by('-exemplares_disponiveis', 'titulo')
 
-            livro.exemplares_disponiveis = disponiveis
+            paginator = Paginator(livros, 10)
+            page_number = request.GET.get('page')
+            livros = paginator.get_page(page_number)
+            
+            
 
-            html = render_to_string("partials/card_livro.html", {"livro": livro}, request=request)
+            html = render_to_string("partials/lista_livros.html", {
+                "livros": livros,
+                "query": ""
+            }, request=request)
 
         except Exception as e:
             messages.error(request, f"Ocorreu um erro: {e}")

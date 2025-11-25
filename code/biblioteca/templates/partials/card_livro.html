@@ -11,8 +11,8 @@
         <button 
             class="card-btn"
             hx-post="/livros/{{ livro.id }}/reservar/"
-            hx-target="#livro-{{ livro.id }}"
-            hx-swap="outerHTML"
+            hx-target="#livros-grid"
+            hx-swap="innerHTML"
             hx-confirm="Quer mesmo reservar esse livro?"
             hx-headers='{"X-CSRFToken":"{{ csrf_token }}"}'
             >RESERVAR UM EXEMPLAR
