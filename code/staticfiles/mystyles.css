@@ -480,6 +480,7 @@ input:focus {
     align-items: center;
     margin: 20px 0;
     gap: 10px;
+    max-width: fit-content;
 }
 .pagination a {
     background-color: #3B2200;

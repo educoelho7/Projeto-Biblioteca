@@ -2,6 +2,7 @@ from django.db.models import Count, Q, F, OrderBy
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, JsonResponse
 from django.template import loader
+from django.template.loader import render_to_string
 from .models import Livro, Exemplar, Emprestimo, Multa
 from django.shortcuts import redirect, render
 from django.contrib import messages
@@ -25,10 +26,13 @@ def livros(request):
     page_number = request.GET.get('page')
     livros = paginator.get_page(page_number)
     context = {
-        'livros': livros
+        'livros': livros,
+        'query': query,
     }
-    template = loader.get_template('livros.html')
-    return HttpResponse(template.render(context, request))
+    if request.htmx:
+        return render(request, "partials/lista_livros.html", context)
+    
+    return render(request, "livros.html", context)
 
 @login_required(login_url="/auth/login")
 def reservar(request, livro_id):
@@ -36,6 +40,7 @@ def reservar(request, livro_id):
         try:
             exemplar = Exemplar.objects.filter(livro_id=livro_id, status=Exemplar.StatusType.DISPONIVEL).first()
             multas = Multa.objects.filter(emprestimo__usuario=request.user, status=Multa.StatusType.EM_ABERTO)
+            livro = Livro.objects.get(id=livro_id)
             if exemplar and not multas:
                 emprestimo = Emprestimo.objects.create(
                     usuario=request.user,
@@ -45,10 +50,19 @@ def reservar(request, livro_id):
                 exemplar.status = Exemplar.StatusType.EMPRESTADO
                 exemplar.save()
             
-            return JsonResponse({'multas_em_aberto': True if multas else False})
+            disponiveis = Exemplar.objects.filter(
+                livro=livro,
+                status=Exemplar.StatusType.DISPONIVEL
+            ).count()
+
+            livro.exemplares_disponiveis = disponiveis
+
+            html = render_to_string("partials/card_livro.html", {"livro": livro}, request=request)
 
         except Exception as e:
             messages.error(request, f"Ocorreu um erro: {e}")
+        
+        return HttpResponse(html)
 
     return redirect('livros')
 

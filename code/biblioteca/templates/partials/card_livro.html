@@ -1,0 +1,23 @@
+<div class="card" id="livro-{{ livro.id }}">
+    <div class="card-header">{{ livro.titulo }}</div>
+    <div class="card-info">
+        <p><strong>Autor:</strong> {{ livro.autor }}</p>
+        <p><strong>Categoria:</strong> {{ livro.categoria }}</p>
+        <p><strong>Ano:</strong> {{ livro.ano }}</p>
+        <p><strong>Editora:</strong> {{ livro.editora }}</p>
+        <p><strong>Exemplares disponíveis:</strong> {{ livro.exemplares_disponiveis }}</p>
+    </div>
+    {% if livro.exemplares_disponiveis > 0 %}
+        <button 
+            class="card-btn"
+            hx-post="/livros/{{ livro.id }}/reservar/"
+            hx-target="#livro-{{ livro.id }}"
+            hx-swap="outerHTML"
+            hx-confirm="Quer mesmo reservar esse livro?"
+            hx-headers='{"X-CSRFToken":"{{ csrf_token }}"}'
+            >RESERVAR UM EXEMPLAR
+        </button>
+    {% else %}
+        <center><p>Não há nenhum exemplar disponível desse livro.</p></center>
+    {% endif %}
+</div>
