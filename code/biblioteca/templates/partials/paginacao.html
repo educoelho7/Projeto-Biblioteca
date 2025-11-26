@@ -1,0 +1,39 @@
+{% if page_obj.has_other_pages %}
+<div class="pagination">
+    {% if page_obj.has_previous %}
+        <a 
+            href="#"
+            hx-get="?page=1{% if query %}&q={{ query }}{% endif %}"
+            hx-target="{{ hx_target }}"
+            hx-swap="innerHTML"
+            hx-push-url="true"
+        >&laquo; Primeira</a>
+        <a 
+            href="#"
+            hx-get="?page={{ page_obj.previous_page_number }}{% if query %}&q={{ query }}{% endif %}"
+            hx-target="{{ hx_target }}"
+            hx-swap="innerHTML"
+            hx-push-url="true"
+        >Anterior</a>
+    {% endif %}
+
+    <span>Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+
+    {% if page_obj.has_next %}
+        <a 
+            href="#"
+            hx-get="?page={{ page_obj.next_page_number }}{% if query %}&q={{ query }}{% endif %}"
+            hx-target="{{ hx_target }}"
+            hx-swap="innerHTML"
+            hx-push-url="true"
+        >Próxima</a>
+        <a 
+            href="#"
+            hx-get="?page={{ page_obj.paginator.num_pages }}{% if query %}&q={{ query }}{% endif %}"
+            hx-target="{{ hx_target }}"
+            hx-swap="innerHTML"
+            hx-push-url="true"
+        >Última &raquo;</a>
+    {% endif %}
+</div>
+{% endif %}

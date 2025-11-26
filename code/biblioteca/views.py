@@ -86,6 +86,9 @@ def emprestimos(request):
     paginator = Paginator(emprestimos, 10)
     page_number = request.GET.get("page")
     emprestimos = paginator.get_page(page_number)
+
+    if request.htmx:
+        return render(request, "partials/lista_emprestimos.html", {"emprestimos": emprestimos})
     
     return render(request, "emprestimos.html", {"emprestimos": emprestimos})
 
@@ -106,7 +109,7 @@ def devolver(request, emprestimo_id):
 
         emprestimo.exemplar.status = Exemplar.StatusType.DISPONIVEL
         emprestimo.exemplar.save()
-        return JsonResponse({'atraso': atraso})
+        return render(request, "partials/card_emprestimo.html", {"emprestimo": emprestimo})
 
     return JsonResponse({'error': 'Método inválido'}, status=400)
 

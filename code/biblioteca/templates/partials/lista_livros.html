@@ -1,4 +1,3 @@
-{% csrf_token %}
 <div class="grid" id="livros-grid">
     {% for livro in livros %}
         {% include 'partials/card_livro.html' %}
@@ -7,38 +6,4 @@
     {% endfor %}
 </div>
 
-{% if livros.has_other_pages %}
-<div class="pagination">
-    {% if livros.has_previous %}
-        <a 
-            hx-get="?page=1{% if query %}&q={{ query }}{% endif %}"
-            hx-target="#livros-container"
-            hx-swap="innerHTML"
-            hx-push-url="true"
-        >&laquo; Primeira</a>
-        <a 
-            hx-get="?page={{ livros.previous_page_number }}{% if query %}&q={{ query }}{% endif %}"
-            hx-target="#livros-container"
-            hx-swap="innerHTML"
-            hx-push-url="true"
-        >Anterior</a>
-    {% endif %}
-
-    <span>Página {{ livros.number }} de {{ livros.paginator.num_pages }}</span>
-
-    {% if livros.has_next %}
-        <a 
-            hx-get="?page={{ livros.next_page_number }}{% if query %}&q={{ query }}{% endif %}"
-            hx-target="#livros-container"
-            hx-swap="innerHTML"
-            hx-push-url="true"
-        >Próxima</a>
-        <a 
-            hx-get="?page={{ livros.paginator.num_pages }}{% if query %}&q={{ query }}{% endif %}"
-            hx-target="#livros-container"
-            hx-swap="innerHTML"
-            hx-push-url="true"
-        >Última &raquo;</a>
-    {% endif %}
-</div>
-{% endif %}
+{% include 'partials/paginacao.html' with page_obj=livros query=query hx_target="#livros-container" %}

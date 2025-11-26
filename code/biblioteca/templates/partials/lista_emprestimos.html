@@ -1,0 +1,9 @@
+<div class="grid" id="livros-grid">
+    {% for emprestimo in emprestimos %}
+        {% include 'partials/card_emprestimo.html' %}
+    {% empty %}
+        <p>Nenhum empréstimo encontrado.</p>
+    {% endfor %}
+</div>
+
+{% include 'partials/paginacao.html' with page_obj=emprestimos query=query hx_target="#emprestimos-container" %}
