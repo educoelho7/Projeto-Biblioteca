@@ -1,0 +1,9 @@
+<div class="grid" id="multas-grid">
+    {% for multa in multas %}
+        {% include 'partials/card_multa.html' %}
+    {% empty %}
+        <p>Nenhuma multa encontrado.</p>
+    {% endfor %}
+</div>
+
+{% include 'partials/paginacao.html' with page_obj=multas hx_target="#multas-container" %}

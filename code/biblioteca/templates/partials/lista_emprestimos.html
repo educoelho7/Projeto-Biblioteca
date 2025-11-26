@@ -6,4 +6,4 @@
     {% endfor %}
 </div>
 
-{% include 'partials/paginacao.html' with page_obj=emprestimos query=query hx_target="#emprestimos-container" %}
+{% include 'partials/paginacao.html' with page_obj=emprestimos hx_target="#emprestimos-container" %}

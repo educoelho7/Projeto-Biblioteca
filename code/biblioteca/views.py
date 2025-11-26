@@ -120,6 +120,9 @@ def multas(request):
     paginator = Paginator(multas, 10)
     page_number = request.GET.get("page")
     multas = paginator.get_page(page_number)
+
+    if request.htmx:
+        return render(request, "partials/lista_multas.html", {"multas": multas})
     
     return render(request, "multas.html", {"multas": multas})
 
@@ -129,15 +132,7 @@ def pagar(request, multa_id):
         multa = Multa.objects.get(id=multa_id)
         multa.status = Multa.StatusType.PAGA
         multa.save()
-    
-    return redirect('multas')
-
-@login_required(login_url="/auth/login")
-def pagar(request, multa_id):
-    if request.method == "POST":
-        multa = Multa.objects.get(id=multa_id)
-        multa.status = Multa.StatusType.PAGA
-        multa.save()
+        return render(request, 'partials/card_multa.html', {"multa": multa})
     
     return redirect('multas')
 

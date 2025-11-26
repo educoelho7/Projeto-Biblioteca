@@ -1,0 +1,22 @@
+<div class="card" id="multa-{{ multa.id }}">
+    <div class="card-info">
+        <p><strong>Código:</strong> {{ multa.id }}</p>
+        <p><strong>Exemplar:</strong> {{ multa.emprestimo.exemplar }}</p>
+        <p class="data-emprestimo" data-date={{ multa.emprestimo.data_emprestimo|date:'Y-m-d' }}>
+            <strong>Data empréstimo:</strong> {{ multa.emprestimo.data_emprestimo }}
+        </p>
+        <p><strong>Data devolução:</strong> {{ multa.emprestimo.data_devolucao }}</p>
+        <p><strong>Valor:</strong> R$ {{ multa.valor|floatformat:2 }}</p>
+        <p><strong>Status:</strong> {{ multa.status }}</p>
+    </div>
+    {% if multa.status == "EM_ABERTO" %}
+        <button class="card-btn"
+                hx-post="{% url 'pagar' multa.id %}"
+                hx-target="#multa-{{ multa.id }}"
+                hx-confirm="Quer mesmo pagar essa multa?"
+                hx-headers='{"X-CSRFToken":"{{ csrf_token }}"}'
+                hx-swap="outerHTML">
+            PAGAR
+        </button>
+    {% endif %}
+</div>
