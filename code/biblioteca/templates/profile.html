@@ -7,76 +7,8 @@
     <img src="{% static 'perfil.png' %}" alt="Avatar" class="profile-avatar">
     <h2 class="profile-name">{{ user.username }}</h2>
   </div>
-
-  <form class="profile-form" method="POST" action="{% url 'alterar_perfil' %}">
-    {% csrf_token %}
-    <div class="form-row">
-      <div class="form-group">
-        <label for="email">E-mail</label>
-        <input name="email" type="email" value="{{ user.email }}">
-      </div>
-
-      <div class="form-group">
-        <label for="telefone">Telefone</label>
-        <input name="telefone" type="tel" maxlength="15" value="{{ user.telefone }}">
-      </div>
-    </div>
-
-    <div class="form-row">
-      <div class="form-group">
-        <label for="nome">Nome</label>
-        <input name="nome" type="text" value="{{ user.first_name }}">
-      </div>
-
-      <div class="form-group">
-        <label for="sobrenome">Sobrenome</label>
-        <input name="sobrenome" type="text" value="{{ user.last_name }}">
-      </div>
-    </div>
-
-    <div class="form-row">
-      <div class="form-group">
-        <label for="senha">Senha</label>
-        <input name="senha" type="password" value="">
-      </div>
-
-      <div class="form-group">
-        <label for="nova-senha">Nova senha</label>
-        <input name="nova-senha" type="password" value="">
-      </div>
-    </div>
-
-    <button type="submit" class="profile-save-btn">SALVAR</button>
-  </form>
+  <div id="profile-form-container">
+      {% include 'partials/profile_form.html' %}
+  </div>
 </main>
-
-<script>
-    const telefoneInput = document.querySelector('input[name="telefone"]');
-
-    telefoneInput.addEventListener('input', function(e) {
-        let value = e.target.value.replace(/\D/g, ''); 
-        if (value.length > 11) value = value.slice(0, 11); 
-
-        if (value.length > 6 && value.length <= 10) {
-            value = value.replace(/^(\d{2})(\d{4})(\d{0,4}).*/, '($1) $2-$3');
-        } else if (value.length > 10) {
-            value = value.replace(/^(\d{2})(\d{5})(\d{0,4}).*/, '($1) $2-$3');
-        } else if (value.length > 2) {
-            value = value.replace(/^(\d{2})(\d{0,5})/, '($1) $2');
-        } else {
-            value = value.replace(/^(\d{0,2})/, '($1');
-        }
-
-        e.target.value = value;
-    });
-</script>
-
-{% if message %}
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const message = "{{ message }}";
-        alert(message);
-    });
-</script>
-{% endif %}
 {% endblock %}

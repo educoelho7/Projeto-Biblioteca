@@ -151,8 +151,7 @@ def alterar_perfil(request):
 
         # Verify the password
         if not user.check_password(password):
-            message = "Senha incorreta. As alterações não foram salvas."
-            return render(request, 'profile.html', {'user': user, 'message': message})
+            return render(request, 'profile.html', {'user': user})
 
         # If password is correct, update the fields
         user.first_name = request.POST.get('nome', user.first_name)
@@ -168,7 +167,8 @@ def alterar_perfil(request):
         else:
             user.save()
 
-        message = "Perfil atualizado com sucesso!"
-        return render(request, 'profile.html', {'user': user, 'message': message})
+        return render(
+            request, "partials/profile_form.html", {"user": user},
+        )
 
     return render(request, 'profile.html', {'user': user })
