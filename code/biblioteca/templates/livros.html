@@ -14,8 +14,7 @@
             value="{{ query }}"
             hx-get="/livros"
             hx-target="#livros-container"
-            hx-trigger="keyup changed"
-            hx-include="#searchInput"
+            hx-trigger="keyup"
         />
         <button class="search-btn" type="button">
             <img src="{% static 'iconePesquisa.svg' %}" alt="Ícone pesquisa">
